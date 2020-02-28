@@ -18,7 +18,13 @@ class board:
                 self.matrice[ypos].append([])
 
     def teamsGenerate(self,simbol,start,row):
-        #this class can generate in any row
+        """[summary]
+            this function generate the teams
+        Arguments:
+            simbol {[string]} -- [a letter that represents the teams]
+            start {[int]} -- [is the initial column of the board where the symbol will be place]
+            row {[int]} -- [is the initial row of the board where the symbol will be place]
+        """       
         start = start
         for ypos in range(row,row+3):
             for xpos in range(1,9,2):

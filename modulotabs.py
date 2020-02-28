@@ -63,7 +63,15 @@ class tab:
         #-----------------------------------------------------------------------------------------------
     
     def target(self,matrice,player,*args):
-        # save oll target that can have the tabs
+        """[summary]
+        
+        Arguments:
+            matrice {list} -- [receive an array where the location of all the chips is]
+            player {string} -- [receive the player symbol that is n or b]
+        
+        returns:
+            [tuple] -- [returns a tuple  with the card (only single tabs)  he can eat, the address, and in how many boxes is the enemy to eat ]
+        """     
         targets = ()
         if len(args) >0:
             if args[0]== True:
@@ -106,7 +114,22 @@ class tab:
         return targets
 
     def eat(self,direction,matrice,point,*args): 
-        #----------------Validating the eat-----------------
+        """[summary]
+        
+        this function make all way of eat for the simple tokens and the dames
+
+        Arguments:
+            direction {[string]} -- [must have as input the address in which the file must eat (ru, rd, lu, ld)]
+            matrice {[list]} -- [it must be the matrix where all the object tabs are]
+            point {[int]} -- [the points that each team carries]
+        
+        Raises:
+            Exception: [generates an exception if one of the validated entries is incorrect]
+        
+        Returns:
+            [list,string,int,bool] -- [the matrix returns with the modified elements, the player that corresponds
+                                            to the next turn, the points it has and if there is an error or not]
+        """ 
         if len(args) >0:
             if args[0]== True:
                 self.symbol = self.symbol.upper()
