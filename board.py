@@ -1,6 +1,6 @@
 from modulotabs import *
 from coloreshell import *
-
+import os
 class board:
 
     def __init__(self):
@@ -101,4 +101,10 @@ class board:
                     if self.matrice[element][tabs] != []:
                         if self.matrice[element][tabs].symbol == "b": 
                             self.matrice[element][tabs].symbol = "B"
+    def clearWindows(self):
+        if os.name == "posix":
+            os.system ("clear")
+        elif os.name == "ce" or os.name == "nt" or os.name == "dos":
+            os.system ("cls")
+    
 

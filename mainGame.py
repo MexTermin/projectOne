@@ -1,7 +1,6 @@
 from board import *
 from modulotabs import *
 import os,sys
-from os import system
 from exceptions import *
 
 tablet = board()
@@ -18,13 +17,13 @@ def restart_program():
 
 
 def start():
-    system("cls")
+    tablet.clearWindows()
     if len(tablet.position(tablet.matrice)["n"]) == 0 and len(tablet.position(tablet.matrice)["N"])  == 0:
-        system("cls")
+        tablet.clearWindows()
         input("           Congratulation player *B* you have won the  game")
         return
     if len(tablet.position(tablet.matrice)["b"]) == 0 and len(tablet.position(tablet.matrice)["B"])  == 0:
-        system("cls")
+        tablet.clearWindows()
         input("          Congratulation player *N* you have won the  game")
         return
 
@@ -88,20 +87,20 @@ def start():
         direction =  str(types[1])
         if direction.upper() != "RD" and direction.upper() != "LD":
             if direction.upper() != "LU" and direction.upper() != "RU":
-                system("cls")
+                tablet.clearWindows()
                 input("You should typing correctly direction")
                 start()
         tablet.turn = tablet.matrice[tab[0]][tab[1]].move(direction,tablet.turn,tablet.matrice)
         #------------------------------------Controller the exceptions-----------------------------
     except invalidmove as e:
-        system("cls")
+        tablet.clearWindows()
         input(str(e))
 
     except invalidtab as e:
-        system("cls")
+        tablet.clearWindows()
         input(str(e))
     except:
-        system("cls")
+        tablet.clearWindows()
         input("Type a correctly tab")
     #-------------- verify is there's a new dame---------
     tablet.makedame()
