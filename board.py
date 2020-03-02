@@ -3,10 +3,12 @@ from coloreshell import *
 import os
 class board:
 
-    def __init__(self):
+    def __init__(self,symbol,dameSymbol):
 
         self.matrice = []
-        self.turn = "n"
+        self.turn = "negro"
+        self.dameSymbol = dameSymbol
+        self.symbol = symbol
         self.pteam1 = 0
         self.pteam2 = 0
 
@@ -17,19 +19,20 @@ class board:
             for xpos in range (0,9):
                 self.matrice[ypos].append([])
 
-    def teamsGenerate(self,simbol,start,row):
+    def CreateTeam(self,team,start,row):
         """[summary]
             this function generate the teams
         Arguments:
             simbol {[string]} -- [a letter that represents the teams]
-            start {[int]} -- [is the initial column of the board where the symbol will be place]
-            row {[int]} -- [is the initial row of the board where the symbol will be place]
+            start {[int]} -- [is the initial column of the board where the team will be place]
+            row {[int]} -- [is the initial row of the board where the team will be place]
         """       
         start = start
         for ypos in range(row,row+3):
             for xpos in range(1,9,2):
                 f = tab()
-                f.symbol = simbol
+                f.team = team
+                f.symbol = self.symbol
                 if start == 2:
                     f.pos =[ypos,xpos+1]
                     self.matrice[ypos][xpos+1]=f
@@ -37,6 +40,9 @@ class board:
                     f.pos =[ypos,xpos]
                     self.matrice[ypos][xpos]=f
             start = 1 if (start == 2) else 2
+    def teamsGenerate(self):
+        self.CreateTeam("negro",1,1)
+        self.CreateTeam("rojo",2,6)
 
     def view(self):
         #--------------------------------this method render de principal view of the program--------------------
@@ -51,8 +57,8 @@ class board:
                 c = Colour.BLACK if (colour ==0) else Colour.WHITE1
                 pos =   "   "  if (self.matrice[vertical][i] == [])  else " "   +   str(self.matrice[vertical][i].symbol)  +   " "
                 if self.matrice[vertical][i] != []:
-                    if self.matrice[vertical][i].symbol.upper() == "N" :
-                        c = Colour.WHITE3
+                    if self.matrice[vertical][i].team.lower() == "rojo" :
+                        c = Colour.WHITE3 
                 tabla += c +  pos +  Colour.END
                 colour = 1  if (colour == 0) else  0 
             indicator = 1 if  (indicator == 0) else 0
@@ -60,23 +66,22 @@ class board:
             
     def position(self, matrice):
         # save all position for any tabs
-        allPos = { "n": [], "b":[],"N":[],"B":[] }
+
+        allPos = { "rojo": [], "negro":[] }
         for element in matrice:
             for ovject in element:
                 if ovject != []:
-                    if  ovject.symbol == "n":
-                        allPos["n"].append(ovject)
-                    elif  ovject.symbol == "b":
-                        allPos["b"].append(ovject)
-                    elif  ovject.symbol == "N":
-                        allPos["N"].append(ovject)
-                    elif  ovject.symbol == "B":
-                        allPos["B"].append(ovject)
+                    if  ovject.team == "rojo":
+                        allPos["rojo"].append(ovject)
+                    elif  ovject.team == "negro":
+                        allPos["negro"].append(ovject)
+
         return allPos
 
     def translate(self,string):
         # this method translate the input
-        string = string.lower()
+        if not isinstance(string,int):
+            string = string.lower()
         listing = {
              "a":1,
              "b":2,
@@ -85,7 +90,17 @@ class board:
              "e":5,
              "f":6,
              "g":7,
-             "h":8
+             "h":8,
+
+             1:"a",
+             2:"b",
+             3:"c",
+             4:"d",
+             5:"e",
+             6:"f",
+             7:"g",
+             8:"h"
+
         }
         return listing[string]
 
@@ -95,12 +110,14 @@ class board:
             for tabs in range(1,9):
                 if element == 1:
                     if self.matrice[element][tabs] != []:
-                        if self.matrice[element][tabs].symbol == "n": 
-                            self.matrice[element][tabs].symbol = "N"
+                        if self.matrice[element][tabs].team == "rojo": 
+                            self.matrice[element][tabs].symbol = self.dameSymbol
+                            self.matrice[element][tabs].isDame = True
                 if element == 8:
                     if self.matrice[element][tabs] != []:
-                        if self.matrice[element][tabs].symbol == "b": 
-                            self.matrice[element][tabs].symbol = "B"
+                        if self.matrice[element][tabs].team == "negro": 
+                            self.matrice[element][tabs].symbol = self.dameSymbol
+                            self.matrice[element][tabs].isDame = True
     def clearWindows(self):
         if os.name == "posix":
             os.system ("clear")

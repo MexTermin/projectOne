@@ -3,39 +3,38 @@ from modulotabs import *
 import os,sys
 from exceptions import *
 
-tablet = board()
+tablet = board("◎","◉")
 tablet.makematriz()
-tablet.teamsGenerate("b",1,1)
-tablet.teamsGenerate("n",2,6)
+tablet.teamsGenerate()
+
 
 def restart_program():
     """Restarts the current program.
     Note: this function does not return. Any cleanup action (like
     saving data) must be done before calling this function."""
-    python = sys.executable
-    os.execl(python, python, * sys.argv)
+    os.execl(sys.executable, os.path.abspath(__file__), *sys.argv)
 
 
 def start():
     tablet.clearWindows()
-    if len(tablet.position(tablet.matrice)["n"]) == 0 and len(tablet.position(tablet.matrice)["N"])  == 0:
+    if len(tablet.position(tablet.matrice)["rojo"]) == 0 :
         tablet.clearWindows()
-        input("           Congratulation player *B* you have won the  game")
+        input("           Congratulation player *Negro* you have won the  game, enter to continue...  ")
         return
-    if len(tablet.position(tablet.matrice)["b"]) == 0 and len(tablet.position(tablet.matrice)["B"])  == 0:
+    if len(tablet.position(tablet.matrice)["negro"]) == 0 :
         tablet.clearWindows()
-        input("          Congratulation player *N* you have won the  game")
+        input("          Congratulation player *Rojo* you have won the  game, enter to continue...    ")
         return
 
     #----------------------Make the view to the tablet -----------------------------
-    if tablet.turn == "n":
+    if tablet.turn == "rojo":
         poin = tablet.pteam1
     else:
         poin = tablet.pteam2
     print("Is turn of the team -",tablet.turn, "- you have {} points".format(poin))
     print(tablet.view())
     #-------------------------------------------------------------------------------
-    searching = ["n","N"] if  (tablet.turn == "n") else ["b","B"]
+    searching = ["rojo"] if  (tablet.turn == "rojo") else ["negro"]
     pos = tablet.position(tablet.matrice)
     targets = []
     #-------------------------------------------------make dame-----------------------------------------------
@@ -46,11 +45,14 @@ def start():
         for tabs in pos[element]:
             if len(tabs.target(tablet.matrice,tablet.turn) ) > 0: 
                 targets.append(tabs.target(tablet.matrice,tablet.turn) )
-    #----------------------------------------------Single eat(obligatory)-----------------------------------------------------------
+    #----------------------------------------------Single eat(obligatory)---s--------------------------------------------------------
     if len(targets) == 1:
-        input("You should eat whit the tab, "+ str(targets[0]))
+        view = targets[0]
+        view[0][1] =  tablet.translate(view[0][1])
+        input("You should eat whit the tab, "+ str(view))
+        view[0][1] =  tablet.translate(view[0][1])
         tablet.matrice,tablet.turn,poin = tablet.matrice[targets[0][0][0]] [targets[0][0][1]].eat(targets[0][1],tablet.matrice,poin)
-        if tablet.turn == "n":
+        if tablet.turn == "rojo":
             tablet.pteam2 = poin
         else:
             tablet.pteam1 = poin
@@ -58,10 +60,12 @@ def start():
         start()
     #---------------------------------------------------------MultiEat---------------------------------------------------------------------
     elif len(targets) > 1:
-        print(targets)
         # -----------------------------------------------------Watching targets-------------------------------------------------------------------
         for i in range(len(targets)):
-            print("       ",i,"        ",end="")
+            view = targets[i]
+            view[0][1] = tablet.translate(view[0][1])
+            print(str(i)+":"+str(view)+"  ", end="")
+            view[0][1] = tablet.translate(view[0][1])
 
         try:
             answer = int(input("  Select one target to eat:  "))
@@ -72,14 +76,14 @@ def start():
             start()
         tablet.matrice,tablet.turn,poin= tablet.matrice[targets[answer][0][0] ] [ targets[answer][0][1] ].eat(targets[answer][1],tablet.matrice,poin)
         #--addated point to each team--
-        if tablet.turn == "n":
+        if tablet.turn == "rojo":
             tablet.pteam2 = poin
         else:
             tablet.pteam1 = poin
         start()
     # ------------------------------------------make the move--------------------------------------------------------------------------
     
-    types = input("Type de tab and its directions, example '3A RU' ").split(" ")
+    types = input("Type de tab and its directions: ").split(" ")
 
     try:
         #----------------------------------Controller the steps------------------------------------
@@ -90,7 +94,10 @@ def start():
                 tablet.clearWindows()
                 input("You should typing correctly direction")
                 start()
-        tablet.turn = tablet.matrice[tab[0]][tab[1]].move(direction,tablet.turn,tablet.matrice)
+        if tablet.matrice[tab[0]][tab[1]] ==  []:
+            raise invalidmove("Select a correct tab")
+        else:
+            tablet.turn = tablet.matrice[tab[0]][tab[1]].move(direction,tablet.turn,tablet.matrice)
         #------------------------------------Controller the exceptions-----------------------------
     except invalidmove as e:
         tablet.clearWindows()
@@ -113,4 +120,4 @@ while True:
     if answer.lower() == "yes":
         restart_program()
     elif answer.lower() == "no":
-        exit()
+        exit(0)
