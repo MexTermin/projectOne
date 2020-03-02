@@ -12,19 +12,26 @@ def restart_program():
     """Restarts the current program.
     Note: this function does not return. Any cleanup action (like
     saving data) must be done before calling this function."""
-    os.execl(sys.executable, os.path.abspath(__file__), *sys.argv)
+
+    while True:
+        answer = input("Type 'Yes' if you wan play again, else type 'No': ")
+        if answer.lower() == "yes":
+            os.execl(sys.executable, os.path.abspath(__file__), *sys.argv)
+        elif answer.lower() == "no":
+            exit(0)
 
 
 def start():
+    
     tablet.clearWindows()
     if len(tablet.position(tablet.matrice)["rojo"]) == 0 :
         tablet.clearWindows()
         input("           Congratulation player *Negro* you have won the  game, enter to continue...  ")
-        return
+        restart_program()
     if len(tablet.position(tablet.matrice)["negro"]) == 0 :
         tablet.clearWindows()
         input("          Congratulation player *Rojo* you have won the  game, enter to continue...    ")
-        return
+        restart_program()
 
     #----------------------Make the view to the tablet -----------------------------
     if tablet.turn == "rojo":
@@ -49,7 +56,7 @@ def start():
     if len(targets) == 1:
         view = targets[0]
         view[0][1] =  tablet.translate(view[0][1])
-        input("You should eat whit the tab, "+ str(view))
+        input("You should eat whit the tab: "+ str(view))
         view[0][1] =  tablet.translate(view[0][1])
         tablet.matrice,tablet.turn,poin = tablet.matrice[targets[0][0][0]] [targets[0][0][1]].eat(targets[0][1],tablet.matrice,poin)
         if tablet.turn == "rojo":
@@ -83,7 +90,7 @@ def start():
         start()
     # ------------------------------------------make the move--------------------------------------------------------------------------
     
-    types = input("Type de tab and its directions: ").split(" ")
+    types = input("Type the tab and its directions: ").split(" ")
 
     try:
         #----------------------------------Controller the steps------------------------------------
@@ -113,11 +120,7 @@ def start():
     tablet.makedame()
     start()
 
+
+
 start()
 
-while True:
-    answer = input("Type 'Yes' if you wan play again, else type 'No': ")
-    if answer.lower() == "yes":
-        restart_program()
-    elif answer.lower() == "no":
-        exit(0)

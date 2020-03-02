@@ -16,6 +16,8 @@ class tab:
             return "negro"
 
     def move(self,direction,turn,matrice):
+        if self.team != turn:
+            raise invalidtab("this tab is not yours")
          #-----------------------------------------------------------------------------------------------
         if direction.upper()  == "RU":
             if  (turn == "rojo" and self.team == "rojo") or (self.isDame == True and self.team == turn)  :
@@ -26,7 +28,7 @@ class tab:
                 else:
                     raise invalidmove("you cant move here")
             else:
-                raise invalidmove("you can't move this tab")
+                raise invalidmove("you can't move this direction")
         #-----------------------------------------------------------------------------------------------
         if direction.upper()  == "LU":
             if (turn == "rojo" and self.team == "rojo") or (self.isDame == True and self.team == turn) :
@@ -37,7 +39,7 @@ class tab:
                 else:
                     raise invalidmove("you cant move here")
             else:
-                raise invalidmove("you can't move this tab")
+                raise invalidmove("you can't move this direction")
         #-----------------------------------------------------------------------------------------------
         if direction.upper()  == "LD":
             if (turn == "negro" and self.team == "negro") or (self.isDame==True and self.team == turn) :
@@ -48,7 +50,7 @@ class tab:
                 else:
                     raise invalidmove("you cant move here")
             else:
-                raise invalidmove("you can't move this tab")         
+                raise invalidmove("you can't move this direction")         
         #-----------------------------------------------------------------------------------------------
         if direction.upper()  == "RD":
             if (turn == "negro" and self.team == "negro") or (self.isDame==True and self.team == turn)  :
@@ -59,7 +61,7 @@ class tab:
                 else:
                     raise invalidmove("you cant move here")            
             else:
-                raise invalidmove("you can't move this tab")
+                raise invalidmove("you can't move this direction")
 
         matrice[self.pos[0]+y1][self.pos[1]+x1] =  matrice[self.pos[0]][self.pos[1]]
         matrice[self.pos[0]][self.pos[1]] = []
